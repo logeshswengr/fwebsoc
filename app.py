@@ -734,4 +734,4 @@ if __name__ == '__main__':
     ws_thread.daemon = True
     ws_thread.start()
     
-    socketio.run(app, debug=True, port=5000, allow_unsafe_werkzeug=True)
+    socketio.run(app, host="0.0.0.0", debug=True, port=5000, allow_unsafe_werkzeug=True)
