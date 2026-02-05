@@ -1,0 +1,15 @@
+REDIRECT_URL='http://srv1235964.hstgr.cloud/fyers/callback'
+BROKER_API_KEY='xxxxx'
+BROKER_API_SECRET='xxxxx'
+# WebSocket Configuration
+WEBSOCKET_URL='wss://rtsocket-api.fyers.in/versova'
+SYMBOL='NSE:NIFTY26FEB25400CE'
+
+# Trading Configuration
+LOT_SIZE=65
+
+# Database Configuration
+DATABASE_URL='sqlite:///fyers_depth.db'
+
+SECRET_KEY='xxxxx'
+API_KEY_PEPPER='xxxxxxxx'
