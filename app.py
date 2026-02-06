@@ -5,7 +5,7 @@ import asyncio
 import websockets
 import re
 from datetime import datetime
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash, send_file
 from flask_socketio import SocketIO
 from dotenv import load_dotenv
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -652,6 +652,25 @@ def fyers_callback():
     else:
         print(f"Fyers authentication failed: {error_message}")
         return redirect(url_for('broker_login') + f'?error={error_message}')
+
+@app.route('/export')
+def bookExport():
+    data = get_full_order_book(ticker)
+    output = io.StringIO()
+    writer = csv.DictWriter(output, fieldnames=data[0].keys())
+    writer.writeheader()
+    writer.writerows(data)
+
+    mem = io.BytesIO()
+    mem.write(output.getvalue().encode("utf-8"))
+    mem.seek(0)
+
+    return send_file(
+        mem,
+        mimetype="text/csv",
+        download_name="data.csv",
+        as_attachment=True
+    )
 
 @app.route('/dashboard')
 def dashboard():
