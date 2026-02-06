@@ -143,7 +143,7 @@ def update_order_book(ticker, bids, asks, tbq, tsq, timestamp, is_snapshot):
                     print(f"   [BID] BID Level {level}: {old_data['price']:.2f} qty:0 orders:{bid['orders']} (preserving level) {ticker}")
                 elif bid['price'] > 0:
                     order_books[ticker]['bids'][level] = bid
-                    print(f"   [BID] BID Level {level}: {bid['price']:.2f} qty:0 orders:{bid['orders']} (was {old_data['price']:.2f} qty:{old_data['qty']:,})")
+                    print(f"   [BID] BID Level {level}: {bid['price']:.2f} qty:0 orders:{bid['orders']} ( {old_data['price']:.2f} qty:{old_data['qty']:,}) {ticker}")
                 else:
                     if old_data['price'] == 0.0:
                         order_books[ticker]['bids'][level] = {'price': 0.0, 'qty': 0, 'orders': 0, 'level': level}
@@ -158,7 +158,7 @@ def update_order_book(ticker, bids, asks, tbq, tsq, timestamp, is_snapshot):
             else:
                 order_books[ticker]['bids'][level] = bid
                 if old_data['price'] != bid['price'] or old_data['qty'] != bid['qty']:
-                    print(f"   [BID] BID Level {level}: {bid['price']:.2f} qty:{bid['qty']:,} orders:{bid['orders']} (was {old_data['price']:.2f} qty:{old_data['qty']:,})")
+                    print(f"   [BID] BID Level {level}: {bid['price']:.2f} qty:{bid['qty']:,} orders:{bid['orders']} (was {old_data['price']:.2f} qty:{old_data['qty']:,}) {ticker}")
     
     # Process ask updates
     for ask in asks:
@@ -189,7 +189,7 @@ def update_order_book(ticker, bids, asks, tbq, tsq, timestamp, is_snapshot):
                     print(f"   [ASK] ASK Level {level}: {old_data['price']:.2f} qty:0 orders:{ask['orders']} (preserving level)")
                 elif ask['price'] > 0:
                     order_books[ticker]['asks'][level] = ask
-                    print(f"   [ASK] ASK Level {level}: {ask['price']:.2f} qty:0 orders:{ask['orders']} (was {old_data['price']:.2f} qty:{old_data['qty']:,})")
+                    print(f"   [ASK] ASK Level {level}: {ask['price']:.2f} qty:0 orders:{ask['orders']} (was {old_data['price']:.2f} qty:{old_data['qty']:,}) {ticker}")
                 else:
                     if old_data['price'] == 0.0:
                         order_books[ticker]['asks'][level] = {'price': 0.0, 'qty': 0, 'orders': 0, 'level': level}
@@ -204,7 +204,7 @@ def update_order_book(ticker, bids, asks, tbq, tsq, timestamp, is_snapshot):
             else:
                 order_books[ticker]['asks'][level] = ask
                 if old_data['price'] != ask['price'] or old_data['qty'] != ask['qty']:
-                    print(f"   [ASK] ASK Level {level}: {ask['price']:.2f} qty:{ask['qty']:,} orders:{ask['orders']} (was {old_data['price']:.2f} qty:{old_data['qty']:,})")
+                    print(f"   [ASK] ASK Level {level}: {ask['price']:.2f} qty:{ask['qty']:,} orders:{ask['orders']} (was {old_data['price']:.2f} qty:{old_data['qty']:,}) {ticker}")
     
     # Mark as initialized after processing updates
     order_books[ticker]['initialized'] = True
