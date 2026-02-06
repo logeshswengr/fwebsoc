@@ -655,7 +655,7 @@ def fyers_callback():
 
 @app.route('/export')
 def bookExport():
-    data = get_full_order_book(ticker)
+    data = get_full_order_book(SYMBOL)
     output = io.StringIO()
     writer = csv.DictWriter(output, fieldnames=data[0].keys())
     writer.writeheader()
