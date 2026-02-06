@@ -662,7 +662,7 @@ def bookExport():
     data = get_full_order_book(TICKER)
     if data and len(data):
         output = io.StringIO()
-        writer = csv.DictWriter(output, fieldnames=data[0].keys())
+        writer = csv.DictWriter(output, fieldnames=next(iter(data.values())).keys())
         writer.writeheader()
         writer.writerows(data)
     
