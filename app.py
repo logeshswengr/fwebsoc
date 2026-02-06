@@ -28,6 +28,7 @@ LOT_SIZE = int(os.getenv('LOT_SIZE', '50'))
 BROKER_API_KEY = os.getenv('BROKER_API_KEY', '')
 BROKER_API_SECRET = os.getenv('BROKER_API_SECRET', '')
 REDIRECT_URL = os.getenv('REDIRECT_URL', 'http://localhost:5000/fyers/callback')
+TICKER = ''
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'your-secret-key-change-in-production')
@@ -334,6 +335,7 @@ def interpret_imbalance(imbalance_pct):
         return "Balanced"
 
 def process_market_depth(message_bytes):
+    global TICKER
     """Process market depth protobuf message with proper order book management"""
     try:
         socket_message = msg_pb2.SocketMessage()
@@ -375,7 +377,7 @@ def process_market_depth(message_bytes):
             
             # Update the order book
             update_order_book(ticker, update_bids, update_asks, tbq, tsq, timestamp, is_snapshot)
-            
+            TICKER = ticker
             # Get the complete order book for display
             full_book = get_full_order_book(ticker)
             if full_book:
@@ -657,7 +659,7 @@ def fyers_callback():
 
 @app.route('/export')
 def bookExport():
-    data = get_full_order_book(SYMBOL)
+    data = get_full_order_book(TICKER)
     if data and len(data):
         output = io.StringIO()
         writer = csv.DictWriter(output, fieldnames=data[0].keys())
