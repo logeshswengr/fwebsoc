@@ -140,7 +140,7 @@ def update_order_book(ticker, bids, asks, tbq, tsq, timestamp, is_snapshot):
                         'orders': bid['orders'], 
                         'level': level
                     }
-                    print(f"   [BID] BID Level {level}: {old_data['price']:.2f} qty:0 orders:{bid['orders']} (preserving level)")
+                    print(f"   [BID] BID Level {level}: {old_data['price']:.2f} qty:0 orders:{bid['orders']} (preserving level) {ticker}")
                 elif bid['price'] > 0:
                     order_books[ticker]['bids'][level] = bid
                     print(f"   [BID] BID Level {level}: {bid['price']:.2f} qty:0 orders:{bid['orders']} (was {old_data['price']:.2f} qty:{old_data['qty']:,})")
@@ -658,21 +658,22 @@ def fyers_callback():
 @app.route('/export')
 def bookExport():
     data = get_full_order_book(SYMBOL)
-    output = io.StringIO()
-    writer = csv.DictWriter(output, fieldnames=data[0].keys())
-    writer.writeheader()
-    writer.writerows(data)
-
-    mem = io.BytesIO()
-    mem.write(output.getvalue().encode("utf-8"))
-    mem.seek(0)
-
-    return send_file(
-        mem,
-        mimetype="text/csv",
-        download_name="data.csv",
-        as_attachment=True
-    )
+    if data and len(data):
+        output = io.StringIO()
+        writer = csv.DictWriter(output, fieldnames=data[0].keys())
+        writer.writeheader()
+        writer.writerows(data)
+    
+        mem = io.BytesIO()
+        mem.write(output.getvalue().encode("utf-8"))
+        mem.seek(0)
+    
+        return send_file(
+            mem,
+            mimetype="text/csv",
+            download_name="data.csv",
+            as_attachment=True
+        )
 
 @app.route('/dashboard')
 def dashboard():
