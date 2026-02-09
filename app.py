@@ -694,7 +694,7 @@ def bookExport():
     tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".csv")
     with open(tmp.name, "w", newline="") as f:
         writer = csv.writer(f)
-        writer.writerow(["id", "symbol", "time", "vwap, "ltp"])
+        writer.writerow(["id", "symbol", "time", "vwap", "ltp"])
         for user in Trend.query.all():
             writer.writerow([user.id, user.symbol, user.timestamp, user.vwap, user.ltp])
 
