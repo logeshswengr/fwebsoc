@@ -682,37 +682,9 @@ def fyers_callback():
 
 @app.route('/export')
 def bookExport():
-    data = Trend.query.order_by(Trend.timestamp).all()
-    output = io.StringIO()
-    writer = csv.writer(output)
-    if data and len(data):
-        output = io.StringIO()
-        writer.writerow([
-        'symbol',
-        'timeframe',
-        'timestamp',
-        'vwap',
-        'ltp'
-        ])
-        for r in rows:
-            writer.writerow([
-                r.symbol,
-                r.timeframe,
-                r.timestamp.isoformat(),
-                r.vwap,
-                r.ltp
-            ])
-
-        output.seek(0)
-
-        return Response(
-            output,
-            mimetype='text/csv',
-            headers={
-                'Content-Disposition': 'attachment; filename=trend.csv'
-            }
-        )
-
+    users = Trend.query.all()
+    return jsonify([user.to_dict() for user in users])
+    
 @app.route('/dashboard')
 def dashboard():
     """Main dashboard with DOM display - with SEBI compliance check"""
