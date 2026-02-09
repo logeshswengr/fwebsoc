@@ -289,7 +289,7 @@ def get_full_order_book(ticker):
 
     if (totalVolume >0):
             vwap = round(sumPriceVolume / totalVolume, 2);
-    lastPrice = round(active_asks[0].price + active_bids[0].price /2, 2)
+    lastPrice = round((active_asks[0]['price'] + active_bids[0]['price'])/2, 2)
     print(f"  ***** LTP {lastPrice} **** VWAP {vwap} *****")
     return {
         'ticker': ticker,
