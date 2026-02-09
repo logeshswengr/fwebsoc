@@ -682,7 +682,8 @@ def fyers_callback():
 
 @app.route("/trend/<int:page>")
 def users_paginated(page):
-    pagination = Trend.query.paginate(page=page, per_page=600)
+    pagination = Trend.query.offset(page).limit(600).all()
+
     return jsonify({
         "items": [u.to_dict() for u in pagination.items],
         "page": page,
