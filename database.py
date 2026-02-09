@@ -284,13 +284,17 @@ def revoke_all_tokens():
         return 0
 
 def insert_trend(VWAP, LTP):
-    candle = Trend(
-    symbol='NIFTY',
-    timeframe='1s',
-    timestamp=datetime.utcfromtimestamp(time.time()),
-    ltp=LTP,
-    vwap=VWAP
-)
-
-    db.session.add(candle)
-    db.session.commit()
+    try:
+        candle = Trend(
+        symbol='NIFTY',
+        timeframe='1s',
+        timestamp=datetime.utcfromtimestamp(time.time()),
+        ltp=LTP,
+        vwap=VWAP
+    )
+    
+        db.session.add(candle)
+        db.session.commit()
+    except Exception as e:
+        print(f"Error checking insert trend: {e}")
+        return False
