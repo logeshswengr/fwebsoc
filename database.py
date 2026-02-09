@@ -1,6 +1,6 @@
 import os
 import base64
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, Text, Boolean
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Text, Boolean, Float
 from sqlalchemy.orm import scoped_session, sessionmaker, declarative_base
 from sqlalchemy.sql import func
 from argon2 import PasswordHasher
