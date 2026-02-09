@@ -269,6 +269,28 @@ def get_full_order_book(ticker):
             'level': i
         })
     
+    sumPriceVolume = 0
+    totalvolume = 0
+    vwap = 0
+    for bid in active_bids:
+        price = bid['price']
+        qty = bid['qty']
+    
+        if price > 0 and qty > 0:
+            sumPriceVolume += price * qty
+            totalVolume += qty
+    for bid in active_asks:
+        price = bid['price']
+        qty = bid['qty']
+    
+        if price > 0 and qty > 0:
+            sumPriceVolume += price * qty
+            totalVolume += qty
+
+    if (totalVolume >0):
+            vwap = round(sumPriceVolume / totalVolume, 2);
+    lastPrice = round(active_asks[0].price + active_bids[0].price /2, 2)
+     print(f"  ***** LTP {lastPrice} **** VWAP {vwap} *****")
     return {
         'ticker': ticker,
         'tbq': book['tbq'],
