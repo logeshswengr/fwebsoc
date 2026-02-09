@@ -682,8 +682,19 @@ def fyers_callback():
 
 @app.route('/export')
 def bookExport():
-    users = Trend.query.all()
-    return jsonify([user.to_dict() for user in users])
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".csv")
+    with open(tmp.name, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["id", "symbol", "time", "vwap, "ltp"])
+        for user in Trend.query.all():
+            writer.writerow([user.id, user.symbol, user.timestamp, user.vwap, user.ltp])
+
+        return send_file(
+            tmp.name,
+            mimetype="text/csv",
+            as_attachment=True,
+            download_name="trend.csv"
+        )
     
 @app.route('/dashboard')
 def dashboard():
