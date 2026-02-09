@@ -684,11 +684,7 @@ def fyers_callback():
 def users_paginated(page):
     pagination = Trend.query.offset(page).limit(600).all()
 
-    return jsonify({
-        "items": [u.to_dict() for u in pagination.items],
-        "page": page,
-        "total": pagination.total
-    })
+    return jsonify([u.to_dict() for u in pagination])
 
 @app.route('/export')
 def bookExport():
