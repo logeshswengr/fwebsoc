@@ -293,8 +293,8 @@ def insert_trend(VWAP, LTP):
         vwap=VWAP
     )
     
-        db.session.add(candle)
-        db.session.commit()
+        db_session.add(candle)
+        db_session.commit()
     except Exception as e:
         print(f"Error checking insert trend: {e}")
         return False
