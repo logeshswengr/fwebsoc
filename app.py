@@ -270,7 +270,7 @@ def get_full_order_book(ticker):
         })
     
     sumPriceVolume = 0
-    totalvolume = 0
+    totalVolume = 0
     vwap = 0
     for bid in active_bids:
         price = bid['price']
