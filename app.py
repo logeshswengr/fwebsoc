@@ -1,4 +1,4 @@
-import os
+import os, tempfile
 import json
 import time
 import asyncio
@@ -679,6 +679,15 @@ def fyers_callback():
     else:
         print(f"Fyers authentication failed: {error_message}")
         return redirect(url_for('broker_login') + f'?error={error_message}')
+
+@app.route("/trend/<int:page>")
+def users_paginated(page):
+    pagination = Trend.query.paginate(page=page, per_page=600)
+    return jsonify({
+        "items": [u.to_dict() for u in pagination.items],
+        "page": page,
+        "total": pagination.total
+    })
 
 @app.route('/export')
 def bookExport():
