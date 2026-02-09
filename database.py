@@ -9,6 +9,8 @@ from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from dotenv import load_dotenv
+from datetime import datetime
+import time
 
 # Load environment variables
 load_dotenv()
@@ -67,6 +69,17 @@ class User(Base):
             return True
         except VerifyMismatchError:
             return False
+
+class Trend(Base):
+    __tablename__ = 'trend'
+    id = Column(Integer, primary_key=True)
+    symbol = Column(String(20), nullable=False)
+    timeframe = Column(String(10), nullable=False)
+    timestamp = Column(DateTime, nullable=False, index=True)
+    vwap = Column(Float, nullable=False)
+    ltp = Column(Float, nullable=False)
+    created_at = Column(DateTime(timezone=True), default=func.now())
+
 
 class Auth(Base):
     __tablename__ = 'auth'
@@ -269,3 +282,15 @@ def revoke_all_tokens():
         print(f"Error revoking all tokens: {e}")
         db_session.rollback()
         return 0
+
+def insert_trend(VWAP, LTP):
+    candle = Trend(
+    symbol='NIFTY',
+    timeframe='1s',
+    timestamp=datetime.utcfromtimestamp(time.time()),
+    ltp=LTP,
+    vwap=VWAP
+)
+
+    db.session.add(candle)
+    db.session.commit()
