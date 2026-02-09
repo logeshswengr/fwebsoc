@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 import msg_pb2
-from database import init_db, authenticate_user, get_auth_token, upsert_auth, find_user_by_username, get_auth_data, revoke_all_tokens, is_token_valid_for_today, insert_trend
+from database import init_db, authenticate_user, get_auth_token, upsert_auth, find_user_by_username, get_auth_data, revoke_all_tokens, is_token_valid_for_today, insert_trend, Trend
 from auth_utils import authenticate_broker, handle_auth_success, mask_api_credential
 import csv
 import io
@@ -682,22 +682,35 @@ def fyers_callback():
 
 @app.route('/export')
 def bookExport():
-    data = get_full_order_book(TICKER)
+    data = Trend.query.order_by(Trend.timestamp).all()
+    output = io.StringIO()
+    writer = csv.writer(output)
     if data and len(data):
         output = io.StringIO()
-        writer = csv.DictWriter(output, fieldnames=next(iter(data.values())).keys())
-        writer.writeheader()
-        writer.writerows(data)
-    
-        mem = io.BytesIO()
-        mem.write(output.getvalue().encode("utf-8"))
-        mem.seek(0)
-    
-        return send_file(
-            mem,
-            mimetype="text/csv",
-            download_name="data.csv",
-            as_attachment=True
+        writer.writerow([
+        'symbol',
+        'timeframe',
+        'timestamp',
+        'vwap',
+        'ltp'
+        ])
+        for r in rows:
+            writer.writerow([
+                r.symbol,
+                r.timeframe,
+                r.timestamp.isoformat(),
+                r.vwap,
+                r.ltp
+            ])
+
+        output.seek(0)
+
+        return Response(
+            output,
+            mimetype='text/csv',
+            headers={
+                'Content-Disposition': 'attachment; filename=trend.csv'
+            }
         )
 
 @app.route('/dashboard')
