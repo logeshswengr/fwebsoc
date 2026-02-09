@@ -79,6 +79,14 @@ class Trend(Base):
     vwap = Column(Float, nullable=False)
     ltp = Column(Float, nullable=False)
     created_at = Column(DateTime(timezone=True), default=func.now())
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "timestamp": self.timestamp,
+            "symbol": self.symbol,
+            "vwap": self.vwap,
+            "ltp": self.ltp
+        }
 
 
 class Auth(Base):
