@@ -743,6 +743,32 @@ def dashboard():
 
     return render_template('dashboard.html', symbol=SYMBOL, lot_size=LOT_SIZE)
 
+@app.route('/api/history/<string:symbol>/<string:min>')
+def api_history(symbol="NSE:NIFTY50-INDEX", min= "1"):
+    fyers = get_fyers()
+    to_date = datetime.now(APP_TZ).strftime("%Y-%m-%d")
+    from_date = (datetime.now(APP_TZ) - pd.Timedelta(days=lookback_days)).strftime("%Y-%m-%d")
+
+    data = {
+        "symbol": symbol,
+        "resolution": resolution,
+        "date_format": "1",
+        "range_from": from_date,
+        "range_to": to_date,
+        "cont_flag": "1"
+    }
+
+    response = fyers.history(data)
+    candles = response.get("candles", [])
+
+    df = pd.DataFrame(
+        candles,
+        columns=["time", "open", "high", "low", "close", "volume"]
+    )
+
+    df["time"] = pd.to_datetime(df["time"], unit="s")
+    return jsonify(df)
+
 @app.route('/auth/logout')
 def logout():
     """Logout route - revoke token and disable WebSocket"""
