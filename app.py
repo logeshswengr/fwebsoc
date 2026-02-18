@@ -745,13 +745,18 @@ def dashboard():
 
 @app.route('/api/history/<string:symbol>/<string:min>')
 def api_history(symbol="NSE:NIFTY50-INDEX", min= "1"):
-    fyers = get_fyers()
-    to_date = datetime.now(APP_TZ).strftime("%Y-%m-%d")
-    from_date = (datetime.now(APP_TZ) - pd.Timedelta(days=lookback_days)).strftime("%Y-%m-%d")
+    username = session['user']
+    fyers = fyersModel.FyersModel(
+        client_id=BROKER_API_KEY,
+        token= get_auth_token(username),
+        log_path=LOG_PATH
+    )
+    to_date = datetime.now().strftime("%Y-%m-%d")
+    from_date = (datetime.now() - pd.Timedelta(days=min)).strftime("%Y-%m-%d")
 
     data = {
         "symbol": symbol,
-        "resolution": resolution,
+        "resolution": "1",
         "date_format": "1",
         "range_from": from_date,
         "range_to": to_date,
