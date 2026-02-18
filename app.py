@@ -5,6 +5,7 @@ import asyncio
 import websockets
 import re
 from datetime import datetime
+from fyers_apiv3 import fyersModel
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash, send_file
 from flask_socketio import SocketIO
 from dotenv import load_dotenv
